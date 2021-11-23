@@ -1,9 +1,9 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-typedef struct _list_node {
+struct _list_node {
         void * data;
-        s_node * next;
+        struct _list_node * next;
 };
 
 typedef struct _list_node s_node;
@@ -26,8 +26,8 @@ s_node * list_append(s_node * head, void * data);
         // creation et ajout d'un noeud en queue de liste
         // retourne la tete de liste
 
-int compare(s_node * head, void * data);
-        // compare la valeur d'un noeud dans la liste
+int compareInt(s_node * head, void * data);
+        // compare la valeur d'un noeud dans la liste (int)
         // retourne -1 si la valeur existe déjà
         // retourne -2 si un il y a un problème de comparaison
         // sinon retourne "l'indice" de la place du noeud dans la liste

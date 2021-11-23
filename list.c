@@ -24,10 +24,11 @@ s_node * list_insert(s_node * head, void * data) {
         if (inserted_node) {
             list_set_data(inserted_node, data);
             inserted_node->next = head;
+            head = inserted_node;
         } else
-            printf("list.c > list_insert(s_node *, void *) > allocation failed.");
+            printf("list.c > list_insert(s_node *, void *) > allocation failed.\n");
     } else
-        printf("list.c > list_insert(s_node *, void *) > data NULL.");
+        printf("list.c > list_insert(s_node *, void *) > data NULL.\n");
 
     return head;
 }
@@ -45,19 +46,31 @@ s_node * list_append(s_node * head, void * data) {
             }
             cursor->next = inserted_node;
         } else
-            printf("list.c > list_append(s_node *, void *) > allocation failed.");
+            printf("list.c > list_append(s_node *, void *) > allocation failed.\n");
     } else
-        printf("list.c > list_append(s_node *, void *) > data NULL.");
+        printf("list.c > list_append(s_node *, void *) > data NULL.\n");
     
     return head;
 }
 
-// compare la valeur d'un noeud dans la liste
+// compare la valeur d'un noeud dans la liste (int)
 // retourne -1 si la valeur existe déjà
 // retourne -2 si un il y a un problème de comparaison
 // sinon retourne "l'indice" de la place du noeud dans la liste
-int compare(s_node * head, void * data) {
-    // comment savoir si je compare des string (ordre alphabétique), des int ou autres ?
+int compareInt(s_node * head, void * data) {
+    int res = 0;
+    s_node * cursor = head;
+    
+    while (cursor != NULL && *(int *) cursor->data < *(int *) data) {
+        cursor = cursor->next;
+        res++;
+    }
+
+    if (cursor != NULL && *(int *) data == *(int *) cursor->data) {
+        res = -1;
+    }
+
+    return res;
 }
 
 // ajout d'un noeud dans une liste ordonnee
@@ -69,29 +82,39 @@ s_node * list_orderedAppend(s_node ** head, int (*compare)(s_node *, void *), vo
         if (inserted_node) {
             int comparison = (*compare)(*head, param);
             if (comparison == -1) {
-                printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > data already exists.");
+                printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > data already exists.\n");
             } else if (comparison == -2) {
-                printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > comparison problem in the list.");
+                printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > comparison problem in the list.\n");
             } else {
-                s_node * cursor = head;
+                s_node * cursor = *head;
                 int i = 0;
-                while (cursor->next != NULL && i < comparison) {
-                    cursor = cursor->next;
-                    i++;
-                }
 
-                if (i == comparison) {
+                // test if it's an insert
+                if (comparison == 0) {
                     list_set_data(inserted_node, param);
-                    inserted_node->next = cursor->next;
-                    cursor->next = inserted_node;
+                    inserted_node->next = cursor;
+                    head = &inserted_node;
                 } else {
-                    printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > fail to append.");
+                    // otherwise test if we have to append
+                    i++;
+                    while (cursor != NULL && i < comparison) {
+                        cursor = cursor->next;
+                        i++;
+                    }
+
+                    if (i == comparison) {
+                        list_set_data(inserted_node, param);
+                        inserted_node->next = cursor->next;
+                        cursor->next = inserted_node;
+                    } else {
+                        printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > fail to append.\n");
+                    }
                 }
             }
         } else
-            printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > allocation failed.");
+            printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > allocation failed.\n");
     } else
-        printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > param NULL.");
+        printf("list.c > list_orderedAppend(s_node **, int (*compare)(s_node *, void *), void *) > param NULL.\n");
     
     return *head;
 }
@@ -99,34 +122,36 @@ s_node * list_orderedAppend(s_node ** head, int (*compare)(s_node *, void *), vo
 // suppression de la premiere instance d'une
 // donnee dans la liste, retourne la tete de liste
 s_node * list_remove(s_node * head, void * data) {
-    if (head->data == data) {
-        list_headRemove(head);
-    } else {
-        s_node * cursor1 = head;
-        s_node * cursor2 = cursor1->next;
-        while (cursor2 != NULL && cursor2->data != data) {
-            cursor1 = cursor1->next;
-            cursor2 = cursor2->next;
-        }
-
-        if (cursor2) {
-            cursor1->next = cursor2->next;
-            cursor2->next = NULL;
-            free(cursor2);
+    if (head != NULL) {
+        s_node *ptr = head;
+        if (ptr->data == data) {
+            head = list_headRemove(head);
         } else {
-            printf("list.c > list_remove(s_node *, void *) > no data found.");
+            while(ptr->next != NULL && ptr->next->data != data){
+                ptr = ptr->next;
+            }
+
+            if(ptr->next->data == data) {
+                s_node *tmp = ptr->next;
+                ptr->next = ptr->next->next;
+                free(tmp);
+            }
         }
     }
-
+    
     return head;
 }
 
 // suppression de la tete de liste
 // retourne la nouvelle tete de liste
 s_node * list_headRemove(s_node * head) {
-    s_node * new_head = head->next;
-    head->next = NULL;
-    free(head);
+    s_node * new_head = head;
+    if (head != NULL) {
+        new_head = head->next;
+        head = NULL;
+        free(head);
+    }
+
     return new_head;
 }
 
