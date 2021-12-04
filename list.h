@@ -26,12 +26,6 @@ s_node * list_append(s_node * head, void * data);
         // creation et ajout d'un noeud en queue de liste
         // retourne la tete de liste
 
-int compareInt(s_node * head, void * data);
-        // compare la valeur d'un noeud dans la liste (int)
-        // retourne -1 si la valeur existe déjà
-        // retourne -2 si un il y a un problème de comparaison
-        // sinon retourne "l'indice" de la place du noeud dans la liste
-
 s_node * list_orderedAppend(s_node ** head, int (*compare)(s_node *, void *), void *param);
         // ajout d'un noeud dans une liste ordonnee
         // selon le resulat de "compare" ;

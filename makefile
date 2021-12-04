@@ -1,9 +1,9 @@
 CC=gcc
 CFLAGS=-Wall
 LDLIBS=-lm
-DEPS=list.h testListHelpers.h
-OBJ=main.o list.o testListHelpers.o
-OBJ_TESTS=tests.o list.o testListHelpers.o
+DEPS=list.h testListHelpers.h strhash.h
+OBJ=main.o list.o testListHelpers.o strhash.o
+OBJ_TESTS=tests.o list.o testListHelpers.o strhash.o
 EXEC=main
 EXEC_TEST=test
 
