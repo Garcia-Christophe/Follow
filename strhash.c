@@ -25,6 +25,7 @@ void tab_hash_destroy(tab_hash * t) {
         for (int i = 0; i < t->nbEntrees; i++) {
             list_destroy(t->liste[i]);
         }
+        free(t);
     }
 }
 
@@ -45,15 +46,14 @@ void tab_hash_ajout(tab_hash * t, const char *mot, int (*compare)(s_node *, void
 }
 
 // suppression d'un mot dans la table de hashage
-void tab_hash_suppression(tab_hash * t, char *mot, int (*compare)(s_node *, void *)) {
+void tab_hash_suppression(tab_hash * t, char *mot) {
     if (t && mot) {
         int cle = clef(mot, t->nbEntrees);
         s_node *courant = t->liste[cle];
 
         if (t->liste[cle] != NULL) {
             int cmp = strcmp(t->liste[cle]->data, mot);
-            if (strcmp(t->liste[cle]->data, mot) == 0) {
-                //courant = t->liste[cle]->next;
+            if (cmp == 0) {
                 free(t->liste[cle]);
                 t->liste[cle] = t->liste[cle]->next;
             } else {
@@ -88,10 +88,10 @@ void display_tab_hash(tab_hash * t) {
         int nbMax = 0;
         int nbMin = 0;
         float sousTotaux[t->nbEntrees];
-        float ecartsTypes[t->nbEntrees];
         float moyenne = 0;
         float ecartType = 0;
         s_node* curseur;
+
         // Parcours des sous-listes (calculs)
         for (int i = 0; i < t->nbEntrees; i++) {
             sousTotal = 0;
@@ -109,12 +109,15 @@ void display_tab_hash(tab_hash * t) {
         }
         moyenne = nbElemTot / t->nbEntrees;
 
-        // Parcours de la liste principale (affichage + calcul écart type)
+        // Parcours de la liste principale (calcul pour l'écart type)
         for (int i = 0; i < t->nbEntrees; i++) {
-            ecartType = (moyenne - sousTotaux[i]) * (moyenne - sousTotaux[i]);
-            ecartType /= t->nbEntrees;
-            ecartType = sqrt(ecartType);
-            
+            ecartType += (moyenne - sousTotaux[i]) * (moyenne - sousTotaux[i]);
+        }
+        ecartType /= t->nbEntrees;
+        ecartType = sqrt(ecartType);
+
+        // Parcours de la liste principale (affichage)
+        for (int i = 0; i < t->nbEntrees; i++) {
             printf("\t%d.\tNbElem : %.0f, écart type : %.2f\t\tListe : ", i, sousTotaux[i], ecartType);
             displayList(t->liste[i], &displayMot);
         }
@@ -123,6 +126,7 @@ void display_tab_hash(tab_hash * t) {
         printf("Nb maximum éléments : %d\n", nbMax);
         printf("Nb minimum éléments : %d\n", nbMin);
         printf("Moyenne : %.2f\n", moyenne);
+        printf("Écart type : %.2f\n", ecartType);
     } else {
         printf("NULL");
     }

@@ -228,7 +228,7 @@ void testStrhash() {
     // suppression "zozm"
     char* mot1 = "zozm";
     printf("-> Suppression de '%s'\n", mot1);
-    tab_hash_suppression(t, mot1, &compareMot);
+    tab_hash_suppression(t, mot1);
     display_tab_hash(t);
     printf("\n");
 
@@ -246,13 +246,13 @@ void testStrhash() {
 
     // suppression (t = NULL)
     printf("-> Suppression (t == NULL)\n");
-    tab_hash_suppression(NULL, mot1, &compareMot);
+    tab_hash_suppression(NULL, mot1);
     display_tab_hash(t);
     printf("\n");
 
     // suppression (mot = NULL)
     printf("-> Suppression (mot == NULL)\n");
-    tab_hash_suppression(t, NULL, &compareMot);
+    tab_hash_suppression(t, NULL);
     display_tab_hash(t);
     printf("\n");
 
@@ -285,7 +285,7 @@ void testStrhash() {
 
     // suppression "voiture"
     printf("-> Suppression de '%s'\n", mot2);
-    tab_hash_suppression(t, mot2, &compareMot);
+    tab_hash_suppression(t, mot2);
     display_tab_hash(t);
     printf("\n");
 
@@ -323,32 +323,32 @@ void testStrhash() {
 
     // suppression ""
     printf("-> Suppression de '%s'\n", mot5);
-    tab_hash_suppression(t, mot5, &compareMot);
+    tab_hash_suppression(t, mot5);
     display_tab_hash(t);
     printf("\n");
 
     // suppression "test" (n'existe pas")
     char* mot6 = "test";
     printf("-> Suppresion de '%s'\n", mot6);
-    tab_hash_suppression(t, mot6, &compareMot);
+    tab_hash_suppression(t, mot6);
     display_tab_hash(t);
     printf("\n");
 
     // suppression "abc"
     printf("-> Suppresion de '%s'\n", mot3);
-    tab_hash_suppression(t, mot3, &compareMot);
+    tab_hash_suppression(t, mot3);
     display_tab_hash(t);
     printf("\n");
 
     // suppression "zozm"
     printf("-> Suppresion de '%s'\n", mot1);
-    tab_hash_suppression(t, mot1, &compareMot);
+    tab_hash_suppression(t, mot1);
     display_tab_hash(t);
     printf("\n");
 
     // suppression "mozzm"
     printf("-> Suppresion de '%s'\n", mot7);
-    tab_hash_suppression(t, mot7, &compareMot);
+    tab_hash_suppression(t, mot7);
     display_tab_hash(t);
     printf("\n");
 
@@ -370,7 +370,7 @@ int main() {
     printf("======================\n");
 
     // testList();
-    // testStrhash();
+    testStrhash();
 
     return 0;
 }

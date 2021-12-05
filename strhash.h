@@ -28,7 +28,7 @@ void tab_hash_freedata(tab_hash * t);
 void tab_hash_ajout(tab_hash * t, const char *mot, int (*compare)(s_node *, void *));
 
 // suppression d'un mot dans la table de hashage
-void tab_hash_suppression(tab_hash * t, char *mot, int (*compare)(s_node *, void *));
+void tab_hash_suppression(tab_hash * t, char *mot);
 
 // affichage de données statistiques sur la table de hashage
 void display_tab_hash(tab_hash * t);
